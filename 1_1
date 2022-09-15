@@ -1,10 +1,12 @@
 //Задание 1
 #include <iostream>
+
+#include <fstream>
 using namespace std;
 
 void decode(string a, int size)
 {
-    for (int j = 0; j < 3; j++) 
+    for (int j = 0; j < 3; j++)
     {
         for (int i = size - 1; i > 0; i--)
         {
@@ -13,14 +15,19 @@ void decode(string a, int size)
             a[i - 1] = temp;
         }
     }
-    cout << "Output: " << a;
-    
+    ofstream fout("output.txt");
+    fout << a; // запись строки в файл
+    fout.close(); // закрываем файл
+    cout << a;
 }
 int main()
 {
-    cout << "Input: ";
+    setlocale(LC_ALL, "rus");
     string s;
-    cin >> s;
+    ifstream fin("input.txt");
+    fin >> s;
+    cout << s << " ";
+    
     int n = s.length();
-    decode(s,n);
+    decode(s, n);
 }
