@@ -1,0 +1,114 @@
+#include <list>
+#include <random>
+#include <string>
+#include <iostream>
+using namespace std;
+
+int random(int k) {
+    return rand() % k;
+}
+void print_int(int* arr, int len) {
+    cout << "\n";
+    cout << arr[0];
+    for (int i = 1; i < len; i++) {
+        cout << ", " << arr[i];
+    }        
+    cout << ";";
+}
+
+void print_matrica(string*** A, int n, int m) {
+    cout << "\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cout << "{ " << A[i][j][0] << ", " << A[i][j][1] << "}";
+        }
+        cout << "\n";
+    }
+}
+
+bool prov(string*** A, int* LS, int* LO, int n, int m)
+{
+    bool ok = true;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if ((LS[i] < LO[j] && stoi(A[i][j][0]) == 1) || (LS[i] > LO[j] && stoi(A[i][j][1]) == 1))
+            {
+                ok = false;
+                cout << "\nМатрица не прошла проверку на cубъекте: " << i << " и объекте: " << j;
+            }
+        }
+    }
+    return ok;
+}
+
+string*** filling_MTR(string*** A, int* LS, int* LO, int n, int m)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (LS[i] >= LO[j])
+                A[i][j][0] = to_string(1);
+            else
+                A[i][j][0] = to_string(0);
+            if (LS[i] <= LO[j])
+                A[i][j][1] = to_string(1);
+            else
+                A[i][j][1] = to_string(0);
+        }
+    }
+    return A;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    cout << "1-read, 2-write" << "\n"; 
+    int n, m;
+    n = 3;
+    m = 5;
+    
+    string*** A = new string * *[n];
+    for (int i = 0; i < n; i++)
+    {
+        A[i] = new string * [m];
+    }
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+        {
+            A[i][j] = new string[2];
+        }
+
+    //LS[i] – значение уровня допуска субъекта si ; LO[1:m] так что LO[j] – значение уровня секретности объекта oj
+    int* LS = new int[n], * LO = new int[m];
+
+
+    srand(time(NULL));
+    for (int i = 0; i < n; i++)
+    {
+        LS[i] = rand() % 9;
+    }
+    for (int i = 0; i < m; i++)
+    {
+        LO[i] = rand() % 9;
+    }
+
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            for (int z = 0; z < 2; z++)
+            {
+                A[i][j][z] = to_string(random(2));
+            }
+    print_matrica(A, n, m);
+    print_int(LS, n);
+    print_int(LO, m);
+    if (prov(A, LS, LO, n, m))
+        cout << "\nМатрица подходит";
+    else
+        cout << "\nМатрица не подходит";
+}
